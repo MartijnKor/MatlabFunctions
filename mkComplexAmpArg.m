@@ -1,9 +1,10 @@
-function [gain ,arg] = mkComplexAmpArg(Re, Im, Bode)
-%Given a complex number, this function returns the amplitude and phase. The
-%values will be returned as amplification and angle in radians. An additional
-%argument can be passed as a 1 to get these values returned. Make that a 2
-%to have the degrees subtracted with 360.
-%as dB and degrees.
+function [gain ,arg] = mkComplexAmpArg(Re, Im, Type)
+%Given a complex number, this function returns the amplitude and phase. As standard, the
+%values will be returned as amplification and angle in radians.
+%An additional argument can be given in as a string:
+%dB: Returns the gain in dB.
+%Deg: Returns the argument in degrees.
+%Bode: Returns gain in dB and the argument in degrees - 360.
 
 gain = sqrt(Re^2+Im^2);
 arg = atan(Im/Re);
@@ -17,15 +18,21 @@ if Re < 0 && (Im < 0)
 end
 
 if nargin > 2
-    if Bode == 1
+    if strcmpi(Type, 'db')
         gain = 20*log10(gain);
-        arg = (arg/(2*pi))*360;
-    end
-    if Bode == 2
+    	
+	elseif strcmpi(Type, 'Deg')
+		arg = ((arg)/2*pi)*360;
+	
+    elseif strcmpi(Type, 'Bode') || strcmpi(Type, 'bode')
         gain = 20*log10(gain);
         arg = (arg/(2*pi))*360;
         arg = arg - 360;
-    end
+	
+	else
+		msg = 'No correct type given. Use HELP for input arguments.';
+		error(msg)
+	end
 end
 
 end
