@@ -26,8 +26,7 @@ if nargin > 2
 	
     elseif strcmpi(Type, 'Bode') || strcmpi(Type, 'bode')
         gain = 20*log10(gain);
-        arg = (arg/(2*pi))*360;
-        arg = arg - 360;
+        arg = (atan2(Im/Re)/(2*pi))*360;
 	
 	else
 		msg = 'No correct type given. Use HELP for input arguments.';
