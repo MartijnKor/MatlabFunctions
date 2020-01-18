@@ -1,4 +1,4 @@
-function [equilibria] = mKfindEquilibria(xdot)
+function [equilibria, symbolic] = mKfindEquilibria(xdot)
 % This function finds all the equilibria for the (non)linear system in the
 % input array xdot, where xdot is the state space representation of the
 % system.
@@ -17,18 +17,25 @@ function [equilibria] = mKfindEquilibria(xdot)
     %% Create the equation array.
     eqn = [];
     for i = 1:length(xdot)
-        eqn = [eqn; xdot(i) == 0]
+        eqn = [eqn; xdot(i) == 0];
     end
     
     %% Solve the equations.
-    solutions = solve(eqn);
+    solutions = solve(eqn, 'ReturnConditions', true);
     variables = fieldnames(solutions);
     first_variable = variables{1};
     
-%     equilibria = zeros(length(solutions.(first_variable)), length(xdot));
-    equilibria = zeros(length(xdot), length(solutions.(first_variable)));
+    symbolic = false;
     for i = 1:length(xdot)
-        column = double(solutions.(variables{i}));
+        try
+            column = double(solutions.(variables{i}));
+        catch
+            column = solutions.(variables{i});
+            symbolic = true;
+        end
         equilibria(i,:) = column;
+        if symbolic == true
+            equilibria = sym(equilibria);
+        end
     end
 end
