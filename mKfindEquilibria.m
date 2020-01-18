@@ -6,7 +6,8 @@ function [equilibria] = mKfindEquilibria(xdot)
 % Input: xdot (nx1) is the state space representation of the system using
 % symbolic variables.
 % Output: The output is an nxm vector representing the equilibria in each
-% column as a seperate equilibrium, where m is the amount of found equilibria.
+% column as a seperate equilibrium returned as doubles
+% , where m is the amount of found equilibria.
 
     %% Check whether xdot is [n,1].
     if length(xdot(1,:)) ~= 1
